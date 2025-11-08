@@ -1,4 +1,5 @@
-﻿using Bank.Domain;
+﻿using Bank.Api.DTOs;
+using Bank.Domain;
 using Bank.Infrastructure.Data;
 using Bank.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,27 +21,23 @@ namespace Bank.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrearMovimiento(Guid accountId, MovementType type, decimal value)
+        public async Task<IActionResult> CrearMovimiento(CreateMovementDto dto)
         {
             try
             {
-                var mov = await _service.ApplyAsync(accountId, type, value);
-                return Ok(mov);
+                var mov = await _service.ApplyAsync(dto.AccountId, dto.Type, dto.Value);
+                return Ok(new { mov.Id, mov.Date, mov.Type, mov.Value, mov.Balance, mov.AccountId });
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
         }
 
         [HttpGet("reporte")]
-        public async Task<IActionResult> Reporte([FromQuery] DateTime desde, [FromQuery] DateTime hasta, [FromQuery] Guid clienteId)
+        public async Task<IActionResult> Reporte([FromQuery] ReportFilterDto f)
         {
-            var movimientos = await _context.Movements
-                .Where(m => m.Account.ClientId == clienteId && m.Date >= desde && m.Date <= hasta)
+            var q = _context.Movements
+                .Where(m => m.Account.ClientId == f.ClientId && m.Date >= f.Desde && m.Date <= f.Hasta)
                 .OrderBy(m => m.Date)
-                .Select(m => new
-                {
+                .Select(m => new {
                     Fecha = m.Date,
                     Cliente = m.Account.Client.Name,
                     NumeroCuenta = m.Account.Number,
@@ -49,10 +46,8 @@ namespace Bank.Api.Controllers
                     Estado = m.Account.IsActive,
                     Movimiento = m.Value,
                     SaldoDisponible = m.Balance
-                })
-                .ToListAsync();
-
-            return Ok(movimientos);
+                });
+            return Ok(await q.ToListAsync());
         }
     }
 }

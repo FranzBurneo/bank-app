@@ -20,7 +20,27 @@ else
 
 builder.Services.AddScoped<Bank.Infrastructure.Services.MovementDomainService>();
 
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("ng", p =>
+        p.WithOrigins("http://localhost:4200")
+         .AllowAnyHeader()
+         .AllowAnyMethod());
+});
+
 var app = builder.Build();
+
+app.UseCors("ng");
+
+app.Use(async (ctx, next) =>
+{
+    try { await next(); }
+    catch (Exception ex)
+    {
+        ctx.Response.StatusCode = 500;
+        await ctx.Response.WriteAsJsonAsync(new { error = ex.Message });
+    }
+});
 
 if (app.Environment.IsDevelopment())
 {

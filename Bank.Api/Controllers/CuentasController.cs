@@ -1,4 +1,5 @@
-﻿using Bank.Domain.Entities;
+﻿using Bank.Api.DTOs;
+using Bank.Domain.Entities;
 using Bank.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +14,10 @@ namespace Bank.Api.Controllers
         public CuentasController(BankDbContext context) => _context = context;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Account>>> GetAll()
-            => await _context.Accounts.Include(a => a.Client).ToListAsync();
+        public async Task<IEnumerable<AccountDto>> GetAll() =>
+            await _context.Accounts.AsNoTracking()
+              .Select(a => new AccountDto(a.Id, a.Number, a.Type, a.CurrentBalance, a.IsActive, a.ClientId))
+              .ToListAsync();
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<Account>> GetById(Guid id)
@@ -25,11 +28,21 @@ namespace Bank.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Account>> Create(Account acc)
+        public async Task<ActionResult<AccountDto>> Create(CreateAccountDto dto)
         {
-            _context.Accounts.Add(acc);
+            var a = new Account
+            {
+                Number = dto.Number,
+                Type = dto.Type,
+                InitialBalance = dto.InitialBalance,
+                CurrentBalance = dto.InitialBalance,
+                ClientId = dto.ClientId,
+                IsActive = true
+            };
+            _context.Accounts.Add(a);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = acc.Id }, acc);
+            return CreatedAtAction(nameof(GetById), new { id = a.Id },
+                new AccountDto(a.Id, a.Number, a.Type, a.CurrentBalance, a.IsActive, a.ClientId));
         }
 
         [HttpPut("{id:guid}")]
