@@ -1,4 +1,15 @@
 services:
+  api:
+    build: ./Bank.Api
+    container_name: bank_api
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=bankdb;Username=bank;Password=bank123
+    depends_on:
+      - postgres
+
   postgres:
     image: postgres:16
     container_name: bank_pg
@@ -10,5 +21,6 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
 volumes:
   pgdata:
