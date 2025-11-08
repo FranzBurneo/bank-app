@@ -1,0 +1,26 @@
+# Visual Studio / .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.svclog
+*.userprefs
+
+# Logs
+*.log
+logs/
+TestResults/
+
+# EF Core snapshot opcional
+*Migrations/**/*.Designer.cs
+
+# Docker
+**/.docker/
+**/docker/*.env
+
+# Node/Angular (cuando agregues el front)
+node_modules/
+dist/
+.angular/
+.env
