@@ -1,0 +1,14 @@
+<header class="topbar">BANCO</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <a routerLink="/clientes" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Clientes</a>
+    <a routerLink="/cuentas" routerLinkActive="active">Cuentas</a>
+    <a routerLink="/movimientos/nuevo" routerLinkActive="active">Movimientos</a>
+    <a routerLink="/reportes" routerLinkActive="active">Reportes</a>
+  </nav>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

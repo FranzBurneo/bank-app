@@ -1,0 +1,33 @@
+<h2>Cuentas</h2>
+
+<p><a routerLink="/cuentas/nueva">Nueva</a></p>
+
+<table class="tbl" *ngIf="!loading; else loadingTpl">
+  <thead>
+    <tr>
+      <th>N° Cuenta</th>
+      <th>Tipo</th>
+      <th>Saldo Inicial</th>
+      <th>Estado</th>
+      <th>Cliente</th>
+      <th style="width:120px">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of items; trackBy: trackByKey">
+      <td>{{ c.number }}</td>
+      <td>{{ c.type }}</td>
+      <td>{{ c.initialBalance | number:'1.2-2' }}</td>
+      <td>{{ c.state ? 'Activo' : 'Inactivo' }}</td>
+      <td>{{ c.clientName || '-' }}</td>
+      <td class="actions">
+        <!-- <a [routerLink]="['/cuentas', c.id || c.number, 'editar']">Editar</a> -->
+        <button (click)="remove(c)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #loadingTpl>
+  <p>Cargando...</p>
+</ng-template>

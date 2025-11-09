@@ -1,0 +1,57 @@
+<h2>Reporte de movimientos</h2>
+
+<form [formGroup]="f" (ngSubmit)="consultar()" class="form">
+  <div class="row">
+    <label>Cliente</label>
+    <select formControlName="clientId">
+      <option value="" disabled>-- Selecciona cliente --</option>
+      <option *ngFor="let c of clientes" [value]="c.id">{{ c.name }}</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <label>Desde</label>
+    <input type="date" formControlName="desde" />
+  </div>
+
+  <div class="row">
+    <label>Hasta</label>
+    <input type="date" formControlName="hasta" />
+  </div>
+
+  <button type="submit" [disabled]="f.invalid || loading">Consultar</button>
+  <button type="button" (click)="exportCsv()" [disabled]="!rows.length">Exportar CSV</button>
+</form>
+
+<div *ngIf="loading">Cargando...</div>
+
+<table class="tbl" *ngIf="!loading && rows.length; else emptyTpl">
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Cliente</th>
+      <th>N° Cuenta</th>
+      <th>Tipo</th>
+      <th>Saldo inicial</th>
+      <th>Estado</th>
+      <th>Movimiento</th>
+      <th>Saldo disponible</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let r of rows">
+      <td>{{ r.fecha | date:'yyyy-MM-dd HH:mm' }}</td>
+      <td>{{ r.cliente }}</td>
+      <td>{{ r.numeroCuenta }}</td>
+      <td>{{ r.tipo }}</td>
+      <td>{{ r.saldoInicial | number:'1.2-2' }}</td>
+      <td>{{ r.estado ? 'Activo' : 'Inactivo' }}</td>
+      <td>{{ r.movimiento | number:'1.2-2' }}</td>
+      <td>{{ r.saldoDisponible | number:'1.2-2' }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #emptyTpl>
+  <p>No hay resultados. Selecciona filtros y presiona “Consultar”.</p>
+</ng-template>

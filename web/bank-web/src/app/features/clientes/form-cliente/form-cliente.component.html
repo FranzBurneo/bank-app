@@ -1,0 +1,29 @@
+<h2>{{ isEdit ? 'Editar cliente' : 'Nuevo cliente' }}</h2>
+
+<form [formGroup]="f" (ngSubmit)="save()" class="form-grid">
+  <div class="form-row">
+    <label>Nombre</label>
+    <input formControlName="name" [class.invalid]="f.get('name')?.invalid && f.touched">
+    <span class="help" *ngIf="f.get('name')?.invalid && f.touched">Obligatorio</span>
+  </div>
+
+  <div class="form-row">
+    <label>Género</label>
+    <select formControlName="gender">
+      <option value="M">Masculino</option>
+      <option value="F">Femenino</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label>Teléfono</label>
+    <input formControlName="phone">
+  </div>
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit" [disabled]="f.invalid || saving">
+      {{ saving ? 'Guardando...' : 'Guardar' }}
+    </button>
+    <a class="btn btn-ghost" routerLink="/clientes">Cancelar</a>
+  </div>
+</form>

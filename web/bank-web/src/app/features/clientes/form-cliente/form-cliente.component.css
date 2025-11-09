@@ -1,0 +1,4 @@
+.form { max-width: 520px; display: grid; gap: 10px; }
+.row { display: grid; gap: 6px; }
+input, select, button { padding: 8px; }
+button[disabled] { opacity: .6; cursor: not-allowed; }

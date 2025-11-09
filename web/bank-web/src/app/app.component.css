@@ -1,0 +1,71 @@
+/* Topbar */
+.topbar{
+  background: linear-gradient(90deg, var(--primary) 0%, #003a9c 100%);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: .5px;
+  padding: var(--space-4) var(--space-6);
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+
+/* Layout */
+.layout{
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--space-6);
+  align-items: start;
+  padding: var(--space-6);
+}
+
+/* Sidebar */
+.sidebar{
+  position: sticky; top: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-3);
+  display: grid;
+  gap: 4px;
+}
+
+.sidebar a{
+  display: block;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+.sidebar a:hover{
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+.sidebar a.active{
+  background: var(--primary-100);
+  color: var(--primary);
+  border-color: color-mix(in srgb, var(--primary) 25%, var(--border));
+}
+
+/* Content */
+.content{
+  min-height: 70vh;
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Títulos de página */
+.content h2{
+  margin: 0 0 var(--space-4);
+  font-size: 28px;
+  letter-spacing: .2px;
+}
+
+/* Responsive */
+@media (max-width: 900px){
+  .layout{ grid-template-columns: 1fr; }
+  .sidebar{ position: static; }
+}

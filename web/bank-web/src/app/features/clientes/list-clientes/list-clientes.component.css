@@ -1,0 +1,5 @@
+.tbl { border-collapse: collapse; min-width: 520px; }
+.tbl th, .tbl td { border: 1px solid #cfd6e4; padding: 8px 10px; }
+.tbl thead th { background: #f3f6fb; text-align: left; }
+.actions { display:flex; gap:8px; }
+button { padding: 6px 10px; }

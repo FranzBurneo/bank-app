@@ -1,0 +1,28 @@
+<div class="page-head">
+  <h2>Clientes</h2>
+  <div class="page-actions">
+    <a class="btn btn-primary" routerLink="/clientes/nuevo">Nuevo</a>
+  </div>
+</div>
+
+<table class="table mt-4">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Género</th>
+      <th>Teléfono</th>
+      <th style="width:130px">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of data">
+      <td>{{ c.name }}</td>
+      <td>{{ c.gender }}</td>
+      <td>{{ c.phone }}</td>
+      <td class="actions">
+        <button class="btn btn-ghost" [routerLink]="['/clientes', c.id, 'editar']">Editar</button>
+        <button class="btn btn-danger" (click)="remove(c)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

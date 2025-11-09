@@ -1,0 +1,36 @@
+<h2>Nueva cuenta</h2>
+
+<form [formGroup]="f" (ngSubmit)="save()" class="form">
+  <div class="row">
+    <label>Número de cuenta</label>
+    <input formControlName="number" />
+  </div>
+
+  <div class="row">
+    <label>Tipo</label>
+    <select formControlName="type">
+      <option value="Ahorros">Ahorros</option>
+      <option value="Corriente">Corriente</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <label>Saldo inicial</label>
+    <input type="number" formControlName="initialBalance" />
+  </div>
+
+  <div class="row">
+    <label>Cliente</label>
+    <select formControlName="clientId">
+      <option value="" disabled>-- Selecciona cliente --</option>
+      <option *ngFor="let c of clientes" [value]="c.id">{{ c.name }}</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <label>Activo</label>
+    <input type="checkbox" formControlName="state" />
+  </div>
+
+  <button type="submit" [disabled]="saving || f.invalid">Guardar</button>
+</form>

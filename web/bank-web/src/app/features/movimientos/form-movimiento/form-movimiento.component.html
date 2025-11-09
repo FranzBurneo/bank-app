@@ -1,0 +1,31 @@
+<h2>Nuevo movimiento</h2>
+
+<form [formGroup]="f" (ngSubmit)="save()" class="form">
+  <div class="row">
+    <label>Cuenta</label>
+    <select formControlName="accountId">
+      <option value="" disabled>-- Selecciona cuenta --</option>
+      <option *ngFor="let c of cuentas" [value]="c.id">{{ c.number }}</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <label>Tipo</label>
+    <select formControlName="type">
+      <option value="Deposit">Depósito</option>
+      <option value="Withdrawal">Retiro</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <label>Valor</label>
+    <input type="number" step="0.01" formControlName="value" />
+  </div>
+
+  <div class="info">
+    <div>Saldo actual: <strong>{{ saldoActual() | number:'1.2-2' }}</strong></div>
+    <div>Saldo resultante: <strong>{{ saldoPreview() | number:'1.2-2' }}</strong></div>
+  </div>
+
+  <button type="submit" [disabled]="saving || f.invalid">Guardar</button>
+</form>
