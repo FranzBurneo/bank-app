@@ -1,0 +1,1115 @@
+{
+	"info": {
+		"_postman_id": "bba80b6f-3118-46fe-81e9-1ef52074c9ff",
+		"name": "Bank API - Clientes, Cuentas y Movimientos",
+		"description": "Colección para probar los endpoints de Clientes, Cuentas y Movimientos.\nVariables útiles:\n- baseUrl: URL base del API (p.ej. http://localhost:5000)\n- clientId: se setea al crear cliente\n- accountId: se setea al crear cuenta\nNotas:\n- En Cuentas y Movimientos, los campos `Type` son enums. Proveo dos variantes de creación de cuenta (Type como entero y como string). Ajusta según tu configuración de JSON options (StringEnumConverter, etc.).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45548318"
+	},
+	"item": [
+		{
+			"name": "👤 Clientes",
+			"item": [
+				{
+					"name": "GET - Listar clientes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Clientes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Clientes"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET - Listar clientes",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Clientes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Clientes"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:28:22 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"6059ee75-9df3-4cc3-9003-c4c1f6b009a8\",\n        \"name\": \"Juan Osorio\",\n        \"gender\": \"M\",\n        \"age\": 34,\n        \"identification\": \"JO001\",\n        \"address\": \"13 junio y Equinoccial\",\n        \"phone\": \"098874587\",\n        \"clientCode\": \"1245\",\n        \"isActive\": true\n    },\n    {\n        \"id\": \"6e232d6d-40a7-45ac-99e4-a74e32ea0219\",\n        \"name\": \"Jose Lema\",\n        \"gender\": \"M\",\n        \"age\": 35,\n        \"identification\": \"JL001\",\n        \"address\": \"Otavalo sn y principal\",\n        \"phone\": \"098254785\",\n        \"clientCode\": \"1234\",\n        \"isActive\": true\n    },\n    {\n        \"id\": \"d07f414e-abce-48db-9ed5-23bce20c3427\",\n        \"name\": \"Marianela Montalvo\",\n        \"gender\": \"F\",\n        \"age\": 32,\n        \"identification\": \"MM001\",\n        \"address\": \"Amazonas y NNUU\",\n        \"phone\": \"097548965\",\n        \"clientCode\": \"5678\",\n        \"isActive\": true\n    },\n    {\n        \"id\": \"019a6e20-76e9-7b8e-8c54-501df5e1e322\",\n        \"name\": \"Franz Burneo Monteros\",\n        \"gender\": \"M\",\n        \"age\": 26,\n        \"identification\": \"1150100517\",\n        \"address\": \"La Paz\",\n        \"phone\": \"0961100356\",\n        \"clientCode\": \"CL-PUT478QR\",\n        \"isActive\": true\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "POST - Crear cliente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 201 Created\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"let data = pm.response.json();",
+									"pm.environment.set(\"clientId\", data.id);",
+									"pm.environment.set(\"clientCode\", data.clientCode);",
+									"pm.environment.set(\"clientName\", data.name);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Juan Pérez\",\n  \"gender\": \"M\",\n  \"age\": 34,\n  \"identification\": \"1100123456\",\n  \"address\": \"Av. Siempre Viva 123\",\n  \"phone\": \"+593999888777\",\n  \"clientCode\": \"\",        \n  \"password\": \"SecretP@ssw0rd\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Clientes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Clientes"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "POST - Crear cliente",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Juan Pérez\",\n  \"gender\": \"M\",\n  \"age\": 34,\n  \"identification\": \"1100123456\",\n  \"address\": \"Av. Siempre Viva 123\",\n  \"phone\": \"+593999888777\",\n  \"clientCode\": \"\",        \n  \"password\": \"SecretP@ssw0rd\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Clientes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Clientes"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:28:38 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Location",
+									"value": "https://localhost:7041/api/Clientes/019a7509-0f78-7663-b718-d54d84daf666"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"019a7509-0f78-7663-b718-d54d84daf666\",\n    \"name\": \"Juan Pérez\",\n    \"gender\": \"M\",\n    \"age\": 34,\n    \"identification\": \"1100123456\",\n    \"address\": \"Av. Siempre Viva 123\",\n    \"phone\": \"+593999888777\",\n    \"clientCode\": \"CL-C8NM4KXW\",\n    \"isActive\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "GET - Obtener cliente por Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Clientes/{{clientId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Clientes",
+								"{{clientId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET - Obtener cliente por Id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Clientes/{{clientId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Clientes",
+										"{{clientId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:29:09 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"clientCode\": \"CL-C8NM4KXW\",\n    \"password\": \"SecretP@ssw0rd\",\n    \"isActive\": true,\n    \"accounts\": [],\n    \"id\": \"019a7509-0f78-7663-b718-d54d84daf666\",\n    \"name\": \"Juan Pérez\",\n    \"gender\": \"M\",\n    \"age\": 34,\n    \"identification\": \"1100123456\",\n    \"address\": \"Av. Siempre Viva 123\",\n    \"phone\": \"+593999888777\"\n}"
+						},
+						{
+							"name": "GET - Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Clientes/{{clientId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Clientes",
+										"{{clientId}}"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/problem+json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:30:19 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"type\": \"https://tools.ietf.org/html/rfc9110#section-15.5.5\",\n    \"title\": \"Not Found\",\n    \"status\": 404,\n    \"traceId\": \"00-b75289a3971f743f69a3ae5001cfdd92-97d65263b5ce47eb-00\"\n}"
+						}
+					]
+				},
+				{
+					"name": "PUT - Actualizar cliente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 204 No Content\", function () {",
+									"  pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"{{clientId}}\",\n  \"name\": \"Juan P. Actualizado\",\n  \"gender\": \"M\",\n  \"age\": 35,\n  \"identification\": \"1100123456\",\n  \"address\": \"Calle Nueva 456\",\n  \"phone\": \"+593999000111\",\n  \"clientCode\": \"{{clientCode}}\",\n  \"password\": \"SecretP@ssw0rd\",\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Clientes/{{clientId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Clientes",
+								"{{clientId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "PUT - Actualizar cliente",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"{{clientId}}\",\n  \"name\": \"Juan P. Actualizado\",\n  \"gender\": \"M\",\n  \"age\": 35,\n  \"identification\": \"1100123456\",\n  \"address\": \"Calle Nueva 456\",\n  \"phone\": \"+593999000111\",\n  \"clientCode\": \"{{clientCode}}\",\n  \"password\": \"SecretP@ssw0rd\",\n  \"isActive\": true\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Clientes/{{clientId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Clientes",
+										"{{clientId}}"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:29:19 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "DELETE - Eliminar cliente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 204 No Content\", function () {",
+									"  pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Clientes/{{clientId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Clientes",
+								"{{clientId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "DELETE - Eliminar cliente",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Clientes/{{clientId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Clientes",
+										"{{clientId}}"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:30:13 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "🏦 Cuentas",
+			"item": [
+				{
+					"name": "GET - Listar cuentas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Cuentas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Cuentas"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET - Listar cuentas",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Cuentas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Cuentas"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:30:42 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"d9a76475-d5de-4fac-a023-254d9f7faaf8\",\n        \"number\": \"495878\",\n        \"type\": \"Corriente\",\n        \"initialBalance\": 0,\n        \"isActive\": true,\n        \"clientId\": \"6059ee75-9df3-4cc3-9003-c4c1f6b009a8\",\n        \"currentBalance\": 0,\n        \"clientName\": \"Juan Osorio\"\n    },\n    {\n        \"id\": \"d87cf55f-ad49-47ef-8c4e-3f408e6a0f7a\",\n        \"number\": \"478758\",\n        \"type\": \"Corriente\",\n        \"initialBalance\": 2000,\n        \"isActive\": true,\n        \"clientId\": \"6e232d6d-40a7-45ac-99e4-a74e32ea0219\",\n        \"currentBalance\": 2000,\n        \"clientName\": \"Jose Lema\"\n    },\n    {\n        \"id\": \"35b85800-14e4-45d7-b018-071e16ed476f\",\n        \"number\": \"496825\",\n        \"type\": \"Corriente\",\n        \"initialBalance\": 540,\n        \"isActive\": true,\n        \"clientId\": \"d07f414e-abce-48db-9ed5-23bce20c3427\",\n        \"currentBalance\": 540,\n        \"clientName\": \"Marianela Montalvo\"\n    },\n    {\n        \"id\": \"019a6efc-7d53-71cd-b634-59c21b764ab4\",\n        \"number\": \"4010101\",\n        \"type\": \"Ahorro\",\n        \"initialBalance\": 500,\n        \"isActive\": true,\n        \"clientId\": \"019a6e20-76e9-7b8e-8c54-501df5e1e322\",\n        \"currentBalance\": 560,\n        \"clientName\": \"Franz Burneo Monteros\"\n    },\n    {\n        \"id\": \"019a732c-540d-7666-99c4-e7f396351095\",\n        \"number\": \"401012\",\n        \"type\": \"Corriente\",\n        \"initialBalance\": 1200,\n        \"isActive\": true,\n        \"clientId\": \"019a6e20-76e9-7b8e-8c54-501df5e1e322\",\n        \"currentBalance\": 1200,\n        \"clientName\": \"Franz Burneo Monteros\"\n    },\n    {\n        \"id\": \"019a73a9-716e-73d4-b473-5e735329bfd4\",\n        \"number\": \"40101a\",\n        \"type\": \"Ahorro\",\n        \"initialBalance\": 700,\n        \"isActive\": true,\n        \"clientId\": \"019a6e20-76e9-7b8e-8c54-501df5e1e322\",\n        \"currentBalance\": 700,\n        \"clientName\": \"Franz Burneo Monteros\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "POST - Crear cuenta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"number\": \"880012\",\n  \"type\": \"Ahorro\",\n  \"initialBalance\": 1000.00,\n  \"clientId\": \"{{clientId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Cuentas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Cuentas"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "POST - Crear cuenta (Type como string) [alternativa]",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"number\": \"880012\",\n  \"type\": \"Ahorro\",\n  \"initialBalance\": 1000.00,\n  \"clientId\": \"{{clientId}}\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Cuentas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Cuentas"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:31:50 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Location",
+									"value": "https://localhost:7041/api/Cuentas/019a750b-fd37-7f2c-b488-66e95f78545f"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"019a750b-fd37-7f2c-b488-66e95f78545f\",\n    \"number\": \"880012\",\n    \"type\": \"Ahorro\",\n    \"initialBalance\": 1000,\n    \"isActive\": true,\n    \"clientId\": \"019a6e20-76e9-7b8e-8c54-501df5e1e322\",\n    \"currentBalance\": 1000,\n    \"clientName\": \"Franz Burneo Monteros\"\n}"
+						}
+					]
+				},
+				{
+					"name": "GET - Obtener cuenta por Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Cuentas/{{accountId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Cuentas",
+								"{{accountId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET - Obtener cuenta por Id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Cuentas/{{accountId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Cuentas",
+										"{{accountId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:32:07 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"019a750b-fd37-7f2c-b488-66e95f78545f\",\n    \"number\": \"880012\",\n    \"type\": \"Ahorro\",\n    \"initialBalance\": 1000,\n    \"isActive\": true,\n    \"clientId\": \"019a6e20-76e9-7b8e-8c54-501df5e1e322\",\n    \"currentBalance\": 1000,\n    \"clientName\": \"Franz Burneo Monteros\"\n}"
+						}
+					]
+				},
+				{
+					"name": "PUT - Actualizar cuenta",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 204 No Content\", function () {",
+									"  pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"number\": \"496825-UPDATED\",\n  \"type\": 0,\n  \"initialBalance\": 700.00,\n  \"isActive\": true,\n  \"clientId\": \"{{clientId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Cuentas/{{accountId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Cuentas",
+								"{{accountId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "PUT - Actualizar cuenta",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"number\": \"496825-UPDATED\",\n  \"type\": 0,\n  \"initialBalance\": 700.00,\n  \"isActive\": true,\n  \"clientId\": \"{{clientId}}\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Cuentas/{{accountId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Cuentas",
+										"{{accountId}}"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:32:20 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "DELETE - Eliminar cuenta",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 204 No Content\", function () {",
+									"  pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Cuentas/{{accountId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Cuentas",
+								"{{accountId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "DELETE - Eliminar cuenta",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Cuentas/{{accountId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Cuentas",
+										"{{accountId}}"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:32:31 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "💸 Movimientos",
+			"item": [
+				{
+					"name": "POST - Crear movimiento (depósito)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 OK\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"let data = pm.response.json();",
+									"pm.environment.set(\"lastMovementId\", data.id);",
+									"pm.environment.set(\"lastBalance\", data.balance);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accountId\": \"{{accountId}}\",\n  \"type\": \"Credito\",\n  \"value\": 150.50\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Movimientos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Movimientos"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "POST - Crear movimiento (depósito)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"accountId\": \"{{accountId}}\",\n  \"type\": \"Credito\",\n  \"value\": 150.50\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Movimientos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Movimientos"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:34:16 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"019a750e-3297-7029-91ab-36c2987785e9\",\n    \"date\": \"2025-11-11T22:34:16.0877253Z\",\n    \"type\": \"Credito\",\n    \"value\": 150.5,\n    \"balance\": 700,\n    \"accountId\": \"019a73a9-716e-73d4-b473-5e735329bfd4\"\n}"
+						}
+					]
+				},
+				{
+					"name": "POST - Crear movimiento (retiro)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accountId\": \"{{accountId}}\",\n  \"type\": \"Debito\",\n  \"value\": 50.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Movimientos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Movimientos"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "POST - Crear movimiento (retiro)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"accountId\": \"{{accountId}}\",\n  \"type\": \"Debito\",\n  \"value\": 50.00\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Movimientos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Movimientos"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:34:41 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"019a750e-9733-71fd-bcd9-d0bf38c99fab\",\n    \"date\": \"2025-11-11T22:34:41.8437237Z\",\n    \"type\": \"Debito\",\n    \"value\": -50,\n    \"balance\": 650,\n    \"accountId\": \"019a73a9-716e-73d4-b473-5e735329bfd4\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "📊 Reporte de Movimientos",
+			"item": [
+				{
+					"name": "GET - Reporte por cliente y rango de fechas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Movimientos/reporte?ClientId={{clientId}}&Desde={{desde}}&Hasta={{hasta}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Movimientos",
+								"reporte"
+							],
+							"query": [
+								{
+									"key": "ClientId",
+									"value": "{{clientId}}"
+								},
+								{
+									"key": "Desde",
+									"value": "{{desde}}"
+								},
+								{
+									"key": "Hasta",
+									"value": "{{hasta}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET - Reporte por cliente y rango de fechas",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Movimientos/reporte?ClientId={{clientId}}&Desde={{desde}}&Hasta={{hasta}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Movimientos",
+										"reporte"
+									],
+									"query": [
+										{
+											"key": "ClientId",
+											"value": "{{clientId}}"
+										},
+										{
+											"key": "Desde",
+											"value": "{{desde}}"
+										},
+										{
+											"key": "Hasta",
+											"value": "{{hasta}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 11 Nov 2025 22:39:36 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"fecha\": \"2025-11-11T19:57:22.153061Z\",\n        \"cliente\": \"Franz Burneo Monteros\",\n        \"numeroCuenta\": \"4010101\",\n        \"tipo\": \"Ahorro\",\n        \"saldoInicial\": 500,\n        \"estado\": true,\n        \"movimiento\": 20,\n        \"saldoDisponible\": 520\n    },\n    {\n        \"fecha\": \"2025-11-11T19:57:53.710422Z\",\n        \"cliente\": \"Franz Burneo Monteros\",\n        \"numeroCuenta\": \"4010101\",\n        \"tipo\": \"Ahorro\",\n        \"saldoInicial\": 500,\n        \"estado\": true,\n        \"movimiento\": 20,\n        \"saldoDisponible\": 540\n    },\n    {\n        \"fecha\": \"2025-11-11T20:07:47.540539Z\",\n        \"cliente\": \"Franz Burneo Monteros\",\n        \"numeroCuenta\": \"4010101\",\n        \"tipo\": \"Ahorro\",\n        \"saldoInicial\": 500,\n        \"estado\": true,\n        \"movimiento\": 20,\n        \"saldoDisponible\": 560\n    },\n    {\n        \"fecha\": \"2025-11-11T22:33:19.05162Z\",\n        \"cliente\": \"Franz Burneo Monteros\",\n        \"numeroCuenta\": \"40101a\",\n        \"tipo\": \"Ahorro\",\n        \"saldoInicial\": 700,\n        \"estado\": true,\n        \"movimiento\": -150.5,\n        \"saldoDisponible\": 549.5\n    },\n    {\n        \"fecha\": \"2025-11-11T22:34:16.087725Z\",\n        \"cliente\": \"Franz Burneo Monteros\",\n        \"numeroCuenta\": \"40101a\",\n        \"tipo\": \"Ahorro\",\n        \"saldoInicial\": 700,\n        \"estado\": true,\n        \"movimiento\": 150.5,\n        \"saldoDisponible\": 700\n    },\n    {\n        \"fecha\": \"2025-11-11T22:34:41.843723Z\",\n        \"cliente\": \"Franz Burneo Monteros\",\n        \"numeroCuenta\": \"40101a\",\n        \"tipo\": \"Ahorro\",\n        \"saldoInicial\": 700,\n        \"estado\": true,\n        \"movimiento\": -50,\n        \"saldoDisponible\": 650\n    }\n]"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost:7041",
+			"type": "string"
+		},
+		{
+			"key": "clientId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "clientCode",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "clientName",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "accountId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "accountNumber",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "desde",
+			"value": "2025-01-01",
+			"type": "string"
+		},
+		{
+			"key": "hasta",
+			"value": "2025-12-31",
+			"type": "string"
+		}
+	]
+}
