@@ -3,12 +3,19 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { ClientesService } from '../../../core/services/clientes.service';
+import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 export interface Cliente {
   id?: string;
   name: string;
   gender: 'M' | 'F';
   phone?: string;
+  age?: number;
+  identification?: string;
+  address?: string;
+  clientCode?: string;
+  password?: string;
 }
 
 @Component({
@@ -24,7 +31,6 @@ export class FormClienteComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
-  // 👉 propiedades usadas por el template
   isEdit = false;
   saving = false;
 
@@ -32,18 +38,60 @@ export class FormClienteComponent implements OnInit {
     id: [''],
     name: ['', Validators.required],
     gender: <'M' | 'F'>('M'),
-    phone: ['']
+    age: [0, Validators.required],
+    identification: [''],
+    address: [''],
+    phone: [''],
+    clientCode: [''],
+    password: ['']
   });
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.isEdit = !!id;
+    this.route.paramMap
+      .pipe(
+        switchMap(pm => {
+          const id = pm.get('id');
+          this.isEdit = !!id;
+          if (!id) return of(null);
+          return this.svc.getById(id);
+        })
+      )
+      .subscribe(cli => {
+        if (!cli) {
+          this.f.reset({
+            id: '',
+            name: '',
+            gender: 'M',
+            age: 0,
+            identification: '',
+            address: '',
+            phone: '',
+            clientCode: '',
+            password: ''
+          });
+          return;
+        }
 
-    if (this.isEdit && id) {
-      this.svc.getById(id).subscribe(cli => {
-        if (cli) this.f.patchValue(cli as any);
+        this.f.patchValue({
+          id:       (cli as any).id ?? '',
+          name:     (cli as any).name ?? '',
+          gender:   (cli as any).gender ?? 'M',
+          phone:    (cli as any).phone ?? '',
+          age:      (cli as any).age ?? 0,
+          identification: (cli as any).identification ?? '',
+          address:  (cli as any).address ?? '',
+          clientCode: (cli as any).clientCode ?? '',
+          password: ''
+        });
       });
-    }
+  }
+
+  genCode() {
+    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const pick = (n: number) =>
+      Array.from({ length: n }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join('');
+    const code = `CL-${pick(8)}`;
+    this.f.patchValue({ clientCode: code });
   }
 
   save(): void {
@@ -52,9 +100,10 @@ export class FormClienteComponent implements OnInit {
 
     const payload = this.f.value as Cliente;
 
-    const obs = this.isEdit && payload.id
-      ? this.svc.update(payload.id, payload)
-      : this.svc.create(payload);
+    const obs =
+      this.isEdit && payload.id
+        ? this.svc.update(payload.id, payload as any)
+        : this.svc.create(payload as any);
 
     obs.subscribe({
       next: () => this.router.navigate(['/clientes']),

@@ -2,14 +2,15 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CuentasService } from '../../../core/services/cuentas.service';
+import { finalize } from 'rxjs/operators';
 
 export interface Cuenta {
-  id?: string;                 // GUID si tu API lo expone
-  number: string;              // número de cuenta
-  type: 'Ahorros' | 'Corriente' | string;
+  id?: string;
+  number: string;
+  type: 'Ahorro' | 'Corriente' | string;
   initialBalance: number;
   state: boolean;
-  clientName?: string;         // si tu API lo devuelve
+  clientName?: string;
 }
 
 @Component({
@@ -24,6 +25,8 @@ export class ListCuentasComponent implements OnInit {
 
   items: Cuenta[] = [];
   loading = false;
+  errorMsg = '';
+  
 
   ngOnInit(): void {
     this.load();
@@ -31,25 +34,34 @@ export class ListCuentasComponent implements OnInit {
 
   load(): void {
     this.loading = true;
-    this.svc.getAll().subscribe({
-      next: (data: any) => {
-        this.items = data as Cuenta[];
-        this.loading = false;
-      },
-      error: () => (this.loading = false)
-    });
+    this.errorMsg = '';
+    this.svc.getAll()
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: (data) => (this.items = data as Cuenta[]),
+        error: (err) => {
+          console.error(err);
+          this.errorMsg = 'No se pudieron cargar las cuentas.';
+        }
+      });
   }
 
   remove(row: Cuenta): void {
-    // Ajusta el identificador según tu API (id | number)
     const key = row.id ?? row.number;
     if (!key) return;
 
-    if (!confirm(`¿Eliminar cuenta ${row.number}?`)) return;
-    this.svc.delete(key as string).subscribe({
-      next: () => this.load(),
-      error: () => alert('No se pudo eliminar la cuenta')
-    });
+    if (!confirm(`¿Eliminar la cuenta ${row.number}?`)) return;
+
+    this.loading = true;
+    this.svc.delete(key)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: () => this.load(),
+        error: (err) => {
+          console.error(err);
+          alert('No se pudo eliminar la cuenta. Intente nuevamente.');
+        }
+      });
   }
 
   trackByKey = (_: number, it: Cuenta) => it.id ?? it.number;

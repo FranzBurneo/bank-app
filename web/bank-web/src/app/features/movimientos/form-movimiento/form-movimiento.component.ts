@@ -1,9 +1,12 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MovimientosService, MovementType } from '../../../core/services/movimientos.service';
+import { Router, RouterLink } from '@angular/router';
+import { MovimientosService } from '../../../core/services/movimientos.service';
 import { CuentasService } from '../../../core/services/cuentas.service';
+
+type UiType = 'Deposit' | 'Withdrawal';     // UI
+type ApiType = 'Credito' | 'Debito';        // API
 
 interface CuentaLite {
   id: string;
@@ -14,25 +17,33 @@ interface CuentaLite {
 @Component({
   selector: 'app-form-movimiento',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './form-movimiento.component.html',
   styleUrls: ['./form-movimiento.component.css']
 })
 export class FormMovimientoComponent implements OnInit {
   f!: FormGroup;
   saving = false;
+  submitted = false;
 
   cuentas: CuentaLite[] = [];
-  saldoActual = signal<number>(0);
 
-  // Vista previa de saldo resultante
+  // signals (estado reactivo de la UI)
+  saldoActual = signal<number>(0);
+  valueSig   = signal<number>(0);
+  typeSig    = signal<UiType>('Deposit');
+
+  // vistas derivadas (reaccionan a los signals)
   saldoPreview = computed(() => {
-    const val = Number(this.f?.get('value')?.value ?? 0);
-    const type = this.f?.get('type')?.value as MovementType;
     const base = this.saldoActual();
-    if (!val || !type) return base;
-    return type === 'Deposit' ? base + val : base - val;
+    const v = this.valueSig();
+    const t = this.typeSig();
+    if (!v) return base;
+    return t === 'Deposit' ? base + v : base - v;
   });
+
+  delta    = computed(() => this.saldoPreview() - this.saldoActual());
+  absDelta = computed(() => Math.abs(this.delta()));
 
   constructor(
     private fb: FormBuilder,
@@ -44,13 +55,23 @@ export class FormMovimientoComponent implements OnInit {
   ngOnInit(): void {
     this.f = this.fb.group({
       accountId: ['', Validators.required],
-      type: ['Deposit' as MovementType, Validators.required],
+      type: ['Deposit' as UiType, Validators.required],
       value: [0, [Validators.required, Validators.min(0.01)]],
     });
 
-    // carga mínima de cuentas
+    // Sincroniza los controles del form con los signals
+    this.valueSig.set(Number(this.f.get('value')!.value || 0));
+    this.typeSig.set(this.f.get('type')!.value as UiType);
+
+    this.f.get('value')!.valueChanges.subscribe(v =>
+      this.valueSig.set(Number(v) || 0)
+    );
+    this.f.get('type')!.valueChanges.subscribe(t =>
+      this.typeSig.set(t as UiType)
+    );
+
+    // Cuentas
     this.cuentasSvc.getAll().subscribe((list: any) => {
-      // ajusta si tu API devuelve otras propiedades
       this.cuentas = (list || []).map((x: any) => ({
         id: x.id,
         number: x.number,
@@ -58,34 +79,37 @@ export class FormMovimientoComponent implements OnInit {
       }));
     });
 
-    // cuando cambia cuenta, actualiza saldoActual (si no viene en getAll, haz otro GET detalle)
+    // Cuando cambia la cuenta, actualiza saldoActual
     this.f.get('accountId')!.valueChanges.subscribe(id => {
       const acc = this.cuentas.find(c => c.id === id);
       this.saldoActual.set(acc?.currentBalance ?? 0);
     });
   }
 
+  private mapUiToApi(t: UiType): ApiType {
+    return t === 'Deposit' ? 'Credito' : 'Debito';
+  }
+
   save(): void {
+    this.submitted = true;
     if (this.f.invalid) {
       this.f.markAllAsTouched();
       return;
     }
 
-    // Validación adicional: retiros no deben dejar saldo negativo (si tu dominio lo exige)
-    const type = this.f.value.type as MovementType;
-    const value = Number(this.f.value.value);
-    if (type === 'Withdrawal' && this.saldoActual() - value < 0) {
-      alert('Saldo insuficiente para realizar el retiro.');
-      return;
-    }
-
     this.saving = true;
-    this.movimientosSvc.create(this.f.value).subscribe({
-      next: () => this.router.navigate(['/movimientos/nuevo'], { queryParams: { ok: 1 } }),
+
+    const payload = {
+      accountId: this.f.value.accountId as string,
+      type: this.mapUiToApi(this.f.value.type as UiType),
+      value: Number(this.f.value.value)
+    };
+
+    this.movimientosSvc.create(payload).subscribe({
+      next: () => this.router.navigate(['/movimientos'], { queryParams: { ok: 1 } }),
       error: (err) => {
         this.saving = false;
-        const msg = err?.error?.message || 'No se pudo registrar el movimiento.';
-        alert(msg);
+        alert(err?.error?.message ?? 'No se pudo registrar el movimiento.');
       }
     });
   }

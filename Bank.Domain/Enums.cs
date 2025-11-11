@@ -1,4 +1,13 @@
-﻿namespace Bank.Domain;
+﻿using System.Runtime.Serialization;
 
-public enum AccountType { Ahorro = 1, Corriente = 2 }
+namespace Bank.Domain;
+
+public enum AccountType
+{
+    [EnumMember(Value = "Ahorro")]
+    Ahorro = 0,
+
+    [EnumMember(Value = "Corriente")]
+    Corriente = 1
+}
 public enum MovementType { Credito = 1, Debito = 2 }

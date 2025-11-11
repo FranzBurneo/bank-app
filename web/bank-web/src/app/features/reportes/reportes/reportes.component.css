@@ -1,5 +1,75 @@
-.form { display:grid; gap:10px; grid-template-columns: 1fr 1fr 1fr auto auto; align-items:end; max-width: 920px; }
-.row { display:grid; gap:6px; }
-.tbl { border-collapse: collapse; margin-top: 14px; min-width: 900px; }
-.tbl th, .tbl td { border: 1px solid #cfd6e4; padding: 8px 10px; }
-.tbl thead th { background: #f3f6fb; text-align: left; }
+/* Card contenedor */
+.report-card{
+  padding: var(--space-6);
+}
+
+/* Grid de filtros */
+.report-filters{
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: 1fr 180px 180px auto;
+  align-items: end;
+}
+.field{ display:grid; gap:6px; }
+.actions{
+  display: flex; align-items: center; gap: var(--space-3);
+  justify-self: end;
+}
+.actions .divider{
+  width:1px; height:28px; background: var(--border);
+}
+
+/* Loader */
+.loader{
+  display:flex; gap:10px; align-items:center;
+  margin: var(--space-6) 0;
+  color: var(--muted);
+}
+.spinner{
+  width:16px; height:16px; border-radius:50%;
+  border:2px solid var(--border);
+  border-top-color: var(--primary);
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Tabla */
+.table-wrap{
+  margin-top: var(--space-4);
+  overflow: auto; /* responsive */
+}
+.table thead th{ position: sticky; top: 0; z-index: 1; }
+
+/* Alineación numérica y color semántico */
+.num{ text-align: right; font-variant-numeric: tabular-nums; }
+.pos{ color: #15803d; } /* verde */
+.neg{ color: #b42318; } /* rojo */
+
+/* Badges */
+.badge{
+  display:inline-flex; align-items:center;
+  padding: 2px 8px; border-radius: 999px;
+  font-size: 12px; font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.badge-green { background: #ecfdf5; border-color:#bbf7d0; color:#065f46; }
+.badge-amber { background: #fff7ed; border-color:#fed7aa; color:#92400e; }
+.badge-blue  { background: var(--primary-100); border-color:#bed2ff; color: var(--primary-600); }
+.badge-gray  { background: #f2f4f7; border-color:#e4e7ec; color:#475467; }
+
+/* Empty state */
+.empty{
+  text-align:center; padding: var(--space-8);
+  border:1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface); box-shadow: var(--shadow);
+}
+.empty-icon{ font-size: 28px; margin-bottom: var(--space-3); }
+
+/* Responsivo */
+@media (max-width: 880px){
+  .report-filters{
+    grid-template-columns: 1fr 1fr;
+  }
+  .actions{ grid-column: 1 / -1; justify-content: flex-start; }
+}

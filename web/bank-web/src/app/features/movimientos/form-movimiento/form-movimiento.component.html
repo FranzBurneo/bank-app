@@ -1,31 +1,61 @@
 <h2>Nuevo movimiento</h2>
 
-<form [formGroup]="f" (ngSubmit)="save()" class="form">
-  <div class="row">
-    <label>Cuenta</label>
-    <select formControlName="accountId">
+<form [formGroup]="f" (ngSubmit)="save()" class="form-grid" novalidate>
+  <!-- Cuenta -->
+  <div class="form-row">
+    <label for="account">Cuenta</label>
+    <select id="account" formControlName="accountId"
+            [class.invalid]="f.get('accountId')?.invalid && (f.get('accountId')?.touched || submitted)">
       <option value="" disabled>-- Selecciona cuenta --</option>
       <option *ngFor="let c of cuentas" [value]="c.id">{{ c.number }}</option>
     </select>
+    <span class="help" *ngIf="f.get('accountId')?.errors?.['required'] && (f.get('accountId')?.touched || submitted)">
+      Obligatorio
+    </span>
   </div>
 
-  <div class="row">
-    <label>Tipo</label>
-    <select formControlName="type">
+  <!-- Tipo -->
+  <div class="form-row">
+    <label for="type">Tipo</label>
+    <select id="type" formControlName="type"
+            [class.invalid]="f.get('type')?.invalid && (f.get('type')?.touched || submitted)">
       <option value="Deposit">Depósito</option>
       <option value="Withdrawal">Retiro</option>
     </select>
+    <span class="help" *ngIf="f.get('type')?.errors?.['required'] && (f.get('type')?.touched || submitted)">
+      Obligatorio
+    </span>
   </div>
 
-  <div class="row">
-    <label>Valor</label>
-    <input type="number" step="0.01" formControlName="value" />
+  <!-- Valor -->
+  <div class="form-row">
+    <label for="value">Valor</label>
+    <input id="value" type="number" step="0.01" formControlName="value"
+           [class.invalid]="f.get('value')?.invalid && (f.get('value')?.touched || submitted)">
+    <span class="help" *ngIf="f.get('value')?.errors?.['required'] && (f.get('value')?.touched || submitted)">
+      Obligatorio
+    </span>
+    <span class="help" *ngIf="f.get('value')?.errors?.['min'] && (f.get('value')?.touched || submitted)">
+      Debe ser mayor a 0
+    </span>
   </div>
 
-  <div class="info">
-    <div>Saldo actual: <strong>{{ saldoActual() | number:'1.2-2' }}</strong></div>
-    <div>Saldo resultante: <strong>{{ saldoPreview() | number:'1.2-2' }}</strong></div>
+  <!-- Panel de saldos -->
+  <div class="info" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+    <div>
+      <div>Saldo actual: <strong>{{ saldoActual() | number:'1.2-2' }}</strong></div>
+      <div>Saldo resultante: <strong>{{ saldoPreview() | number:'1.2-2' }}</strong></div>
+    </div>
+    <div class="chip" [ngClass]="{ up: delta() >= 0, down: delta() < 0 }"
+         style="padding:4px 10px;border-radius:16px;border:1px solid var(--border);background:var(--surface-2);">
+      {{ delta() >= 0 ? '+' : '−' }}{{ absDelta() | number:'1.2-2' }}
+    </div>
   </div>
 
-  <button type="submit" [disabled]="saving || f.invalid">Guardar</button>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit" [disabled]="saving || f.invalid">
+      {{ saving ? 'Guardando...' : 'Guardar' }}
+    </button>
+    <a class="btn btn-ghost" routerLink="/movimientos">Cancelar</a>
+  </div>
 </form>

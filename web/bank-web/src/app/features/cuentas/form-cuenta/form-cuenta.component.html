@@ -1,36 +1,76 @@
-<h2>Nueva cuenta</h2>
+<h2>{{ isEdit ? 'Editar cuenta' : 'Nueva cuenta' }}</h2>
 
-<form [formGroup]="f" (ngSubmit)="save()" class="form">
-  <div class="row">
-    <label>Número de cuenta</label>
-    <input formControlName="number" />
+<form [formGroup]="f" (ngSubmit)="save()" class="form-grid" novalidate>
+  <!-- Número de cuenta -->
+  <div class="form-row">
+    <label for="number">Número de cuenta</label>
+    <input id="number"
+           formControlName="number"
+           placeholder="Solo dígitos"
+           [class.invalid]="fc.number.invalid && (fc.number.touched || submitted)">
+    <span class="help" *ngIf="fc.number.errors?.required && (fc.number.touched || submitted)">
+      Obligatorio
+    </span>
+    <span class="help" *ngIf="fc.number.errors?.pattern && (fc.number.touched || submitted)">
+      Debe contener solo dígitos (8–20)
+    </span>
   </div>
 
-  <div class="row">
-    <label>Tipo</label>
-    <select formControlName="type">
-      <option value="Ahorros">Ahorros</option>
+  <!-- Tipo -->
+  <div class="form-row">
+    <label for="type">Tipo</label>
+    <select id="type"
+            formControlName="type"
+            [class.invalid]="fc.type.invalid && (fc.type.touched || submitted)">
+      <option value="Ahorro">Ahorro</option>
       <option value="Corriente">Corriente</option>
     </select>
+    <span class="help" *ngIf="fc.type.errors?.required && (fc.type.touched || submitted)">
+      Obligatorio
+    </span>
   </div>
 
-  <div class="row">
-    <label>Saldo inicial</label>
-    <input type="number" formControlName="initialBalance" />
+  <!-- Saldo inicial -->
+  <div class="form-row">
+    <label for="initialBalance">Saldo inicial</label>
+    <input id="initialBalance" type="number"
+           formControlName="initialBalance"
+           [class.invalid]="fc.initialBalance.invalid && (fc.initialBalance.touched || submitted)">
+    <span class="help" *ngIf="fc.initialBalance.errors?.required && (fc.initialBalance.touched || submitted)">
+      Obligatorio
+    </span>
+    <span class="help" *ngIf="fc.initialBalance.errors?.min && (fc.initialBalance.touched || submitted)">
+      No puede ser negativo
+    </span>
   </div>
 
-  <div class="row">
-    <label>Cliente</label>
-    <select formControlName="clientId">
+  <!-- Cliente -->
+  <div class="form-row">
+    <label for="clientId">Cliente</label>
+    <select id="clientId"
+            formControlName="clientId"
+            [class.invalid]="fc.clientId.invalid && (fc.clientId.touched || submitted)">
       <option value="" disabled>-- Selecciona cliente --</option>
       <option *ngFor="let c of clientes" [value]="c.id">{{ c.name }}</option>
     </select>
+    <span class="help" *ngIf="fc.clientId.errors?.required && (fc.clientId.touched || submitted)">
+      Obligatorio
+    </span>
   </div>
 
-  <div class="row">
-    <label>Activo</label>
-    <input type="checkbox" formControlName="state" />
+  <!-- Activo -->
+  <div class="form-row">
+    <label class="checkbox">
+      <input type="checkbox" formControlName="state">
+      <span>Activo</span>
+    </label>
   </div>
 
-  <button type="submit" [disabled]="saving || f.invalid">Guardar</button>
+  <!-- Acciones -->
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit" [disabled]="f.invalid || saving">
+      {{ saving ? 'Guardando...' : 'Guardar' }}
+    </button>
+    <a class="btn btn-ghost" routerLink="/cuentas">Cancelar</a>
+  </div>
 </form>

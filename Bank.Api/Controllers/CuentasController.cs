@@ -14,17 +14,42 @@ namespace Bank.Api.Controllers
         public CuentasController(BankDbContext context) => _context = context;
 
         [HttpGet]
-        public async Task<IEnumerable<AccountDto>> GetAll() =>
-            await _context.Accounts.AsNoTracking()
-              .Select(a => new AccountDto(a.Id, a.Number, a.Type, a.CurrentBalance, a.IsActive, a.ClientId))
-              .ToListAsync();
+        public async Task<ActionResult<IEnumerable<AccountDto>>> Get()
+        {
+            var data = await _context.Accounts
+                .Select(a => new AccountDto(
+                    a.Id,
+                    a.Number,
+                    a.Type,
+                    a.InitialBalance,
+                    a.IsActive,
+                    a.ClientId,
+                    a.CurrentBalance,
+                    a.Client.Name)
+                    )
+                .ToListAsync();
+
+            return Ok(data);
+        }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<Account>> GetById(Guid id)
+        public async Task<ActionResult<AccountDto>> GetById(Guid id)
         {
-            var acc = await _context.Accounts.Include(a => a.Client)
-                                             .FirstOrDefaultAsync(a => a.Id == id);
-            return acc is null ? NotFound() : acc;
+            var acc = await _context.Accounts
+                .Where(a => a.Id == id)
+                .Select(a => new AccountDto(
+                    a.Id,
+                    a.Number,
+                    a.Type,
+                    a.InitialBalance,
+                    a.IsActive,
+                    a.ClientId,
+                    a.CurrentBalance,
+                    a.Client.Name)
+                    )
+                .FirstOrDefaultAsync();
+
+            return acc is null ? NotFound() : Ok(acc);
         }
 
         [HttpPost]
@@ -41,15 +66,36 @@ namespace Bank.Api.Controllers
             };
             _context.Accounts.Add(a);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = a.Id },
-                new AccountDto(a.Id, a.Number, a.Type, a.CurrentBalance, a.IsActive, a.ClientId));
+
+            var dtoResponse = await _context.Accounts
+                .Where(x => x.Id == a.Id)
+                .Select(x => new AccountDto(
+                    x.Id,
+                    x.Number,
+                    x.Type,
+                    x.InitialBalance,
+                    x.IsActive,
+                    x.ClientId,
+                    x.CurrentBalance,
+                    x.Client.Name
+                ))
+                .FirstAsync();
+
+            return CreatedAtAction(nameof(GetById), new { id = a.Id }, dtoResponse);
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, Account acc)
+        public async Task<IActionResult> Update(Guid id, UpdateAccountDto dto)
         {
-            if (id != acc.Id) return BadRequest();
-            _context.Entry(acc).State = EntityState.Modified;
+            var acc = await _context.Accounts.FindAsync(id);
+            if (acc is null) return NotFound();
+
+            acc.Number = dto.Number;
+            acc.Type = dto.Type;
+            acc.InitialBalance = dto.InitialBalance;
+            acc.IsActive = dto.IsActive;
+            acc.ClientId = dto.ClientId;
+
             await _context.SaveChangesAsync();
             return NoContent();
         }

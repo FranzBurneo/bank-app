@@ -11,14 +11,16 @@ export const routes: Routes = [
 
   { path: 'clientes', component: ListClientesComponent },
   { path: 'clientes/nuevo', component: FormClienteComponent },
+  { path: 'clientes/:id/editar', component: FormClienteComponent },
 
-  // Cuentas
   { path: 'cuentas', component: ListCuentasComponent },
   { path: 'cuentas/nueva', component: FormCuentaComponent },
+  { path: 'cuentas/:id/editar', component: FormCuentaComponent },
 
   { path: 'movimientos/nuevo', component: FormMovimientoComponent },
 
   { path: 'reportes', component: ReportesComponent },
 
-  { path: '**', redirectTo: 'clientes' }
+  { path: '**', redirectTo: 'clientes' },
+  { path: '**', redirectTo: 'cuentas' }
 ];

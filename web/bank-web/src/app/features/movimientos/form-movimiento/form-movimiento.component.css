@@ -1,5 +1,102 @@
-.form { max-width: 520px; display: grid; gap: 10px; }
-.row { display: grid; gap: 6px; }
-.info { margin: 10px 0; padding: 8px; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 6px; }
-input, select, button { padding: 8px; }
-button[disabled] { opacity: .6; cursor: not-allowed; }
+/* Tarjeta de resumen de saldos */
+.balance-card{
+  margin-top: var(--space-2);
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.balance-card .line{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.balance-card .label{
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.balance-card .value{
+  font-variant-numeric: tabular-nums;
+}
+
+.balance-card .value.strong{
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.balance-card .divider{
+  height: 1px;
+  background: var(--border);
+  border-radius: 1px;
+}
+
+.chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  font-weight: 600;
+}
+
+.icon{ width: 14px; height: 14px; }
+
+.delta.up .chip{
+  border-color: color-mix(in srgb, var(--primary) 35%, white);
+  background: var(--primary-100);
+  color: var(--primary);
+}
+
+.delta.down .chip{
+  border-color: #fecaca;
+  background: #fff1f2;
+  color: #b91c1c;
+}
+
+.total.negative .value.strong{
+  color: #b91c1c;
+}
+
+.hint{
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.hint.warn{ color: #b91c1c; }
+
+.balance-card{
+  margin-top: var(--space-2);
+  padding: var(--space-4);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.balance-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 6px 0;
+}
+.balance-label{ color: var(--muted); }
+.balance-value{ font-variant-numeric: tabular-nums; }
+.balance-value.strong{ font-weight: 700; }
+
+.delta{
+  display:inline-flex; align-items:center; gap:8px;
+  margin-top: var(--space-3);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.delta.pos{ color: #067647; background: #ecfdf3; border-color:#a6f4c5; }
+.delta.neg{ color: #b42318; background: #fef3f2; border-color:#fecdca; }
+.arrow{ font-size: 12px; line-height: 1; }

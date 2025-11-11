@@ -121,3 +121,5 @@ input:focus, select:focus{
 .form-actions{ display:flex; gap:10px; margin-top: var(--space-4); }
 .invalid{ border-color:#ef4444; }
 .help{ color:#ef4444; font-size:12px; }
+
+.checkbox{ display:inline-flex; align-items:center; gap: var(--space-2); }

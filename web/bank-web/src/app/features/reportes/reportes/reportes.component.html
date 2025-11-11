@@ -1,57 +1,93 @@
-<h2>Reporte de movimientos</h2>
+<h2 class="mb-2">Reporte de movimientos</h2>
 
-<form [formGroup]="f" (ngSubmit)="consultar()" class="form">
-  <div class="row">
-    <label>Cliente</label>
-    <select formControlName="clientId">
-      <option value="" disabled>-- Selecciona cliente --</option>
-      <option *ngFor="let c of clientes" [value]="c.id">{{ c.name }}</option>
-    </select>
-  </div>
+<!-- Card de filtros -->
+<div class="card report-card">
+  <form [formGroup]="f" (ngSubmit)="consultar()" class="report-filters" novalidate>
+    <!-- Cliente -->
+    <div class="field">
+      <label for="client">Cliente</label>
+      <select id="client" formControlName="clientId">
+        <option value="" disabled>-- Selecciona cliente --</option>
+        <option *ngFor="let c of clientes" [value]="c.id">{{ c.name }}</option>
+      </select>
+    </div>
 
-  <div class="row">
-    <label>Desde</label>
-    <input type="date" formControlName="desde" />
-  </div>
+    <!-- Desde -->
+    <div class="field">
+      <label for="desde">Desde</label>
+      <input id="desde" type="date" formControlName="desde" />
+    </div>
 
-  <div class="row">
-    <label>Hasta</label>
-    <input type="date" formControlName="hasta" />
-  </div>
+    <!-- Hasta -->
+    <div class="field">
+      <label for="hasta">Hasta</label>
+      <input id="hasta" type="date" formControlName="hasta" />
+    </div>
 
-  <button type="submit" [disabled]="f.invalid || loading">Consultar</button>
-  <button type="button" (click)="exportCsv()" [disabled]="!rows.length">Exportar CSV</button>
-</form>
+    <!-- Acciones -->
+    <div class="actions">
+      <button class="btn btn-primary" type="submit" [disabled]="f.invalid || loading">
+        {{ loading ? 'Consultando…' : 'Consultar' }}
+      </button>
+      <div class="divider"></div>
+      <button class="btn" type="button" (click)="exportCsv()" [disabled]="!rows.length || loading">
+        Exportar CSV
+      </button>
+    </div>
+  </form>
+</div>
 
-<div *ngIf="loading">Cargando...</div>
+<!-- Loader -->
+<div *ngIf="loading" class="loader">
+  <div class="spinner" aria-hidden="true"></div>
+  <span>Consultando datos…</span>
+</div>
 
-<table class="tbl" *ngIf="!loading && rows.length; else emptyTpl">
-  <thead>
-    <tr>
-      <th>Fecha</th>
-      <th>Cliente</th>
-      <th>N° Cuenta</th>
-      <th>Tipo</th>
-      <th>Saldo inicial</th>
-      <th>Estado</th>
-      <th>Movimiento</th>
-      <th>Saldo disponible</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let r of rows">
-      <td>{{ r.fecha | date:'yyyy-MM-dd HH:mm' }}</td>
-      <td>{{ r.cliente }}</td>
-      <td>{{ r.numeroCuenta }}</td>
-      <td>{{ r.tipo }}</td>
-      <td>{{ r.saldoInicial | number:'1.2-2' }}</td>
-      <td>{{ r.estado ? 'Activo' : 'Inactivo' }}</td>
-      <td>{{ r.movimiento | number:'1.2-2' }}</td>
-      <td>{{ r.saldoDisponible | number:'1.2-2' }}</td>
-    </tr>
-  </tbody>
-</table>
+<!-- Tabla -->
+<div class="table-wrap" *ngIf="!loading && rows.length; else emptyTpl">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="min-width:140px;">Fecha</th>
+        <th style="min-width:160px;">Cliente</th>
+        <th>N° Cuenta</th>
+        <th>Tipo</th>
+        <th class="num">Saldo inicial</th>
+        <th>Estado</th>
+        <th class="num">Movimiento</th>
+        <th class="num">Saldo disponible</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of rows">
+        <td>{{ r.fecha | date:'yyyy-MM-dd HH:mm' }}</td>
+        <td>{{ r.cliente }}</td>
+        <td>{{ r.numeroCuenta }}</td>
+        <td>
+          <span class="badge" [ngClass]="r.tipo === 'Crédito' || r.tipo === 'Credito' ? 'badge-green' : 'badge-amber'">
+            {{ r.tipo }}
+          </span>
+        </td>
+        <td class="num">{{ r.saldoInicial | number:'1.2-2' }}</td>
+        <td>
+          <span class="badge" [ngClass]="r.estado ? 'badge-blue' : 'badge-gray'">
+            {{ r.estado ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+        <td class="num" [ngClass]="(r.movimiento ?? 0) >= 0 ? 'pos' : 'neg'">
+          {{ r.movimiento | number:'1.2-2' }}
+        </td>
+        <td class="num">{{ r.saldoDisponible | number:'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
+<!-- Empty state -->
 <ng-template #emptyTpl>
-  <p>No hay resultados. Selecciona filtros y presiona “Consultar”.</p>
+  <div class="empty card">
+    <div class="empty-icon" aria-hidden="true">📄</div>
+    <h3>Sin resultados</h3>
+    <p>Selecciona un cliente y un rango de fechas, luego presiona <strong>Consultar</strong>.</p>
+  </div>
 </ng-template>

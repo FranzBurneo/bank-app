@@ -33,6 +33,13 @@ namespace Bank.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<ClientDto>> Create(CreateClientDto dto)
         {
+            var code = string.IsNullOrWhiteSpace(dto.ClientCode)
+                ? Bank.Domain.Utils.ClientCodeGenerator.NewCode()
+                : dto.ClientCode.Trim().ToUpperInvariant();
+
+            if (await _context.Clients.AnyAsync(c => c.ClientCode == code))
+                return BadRequest(new { message = "El código de cliente ya existe." });
+
             var c = new Client
             {
                 Name = dto.Name,
@@ -41,14 +48,17 @@ namespace Bank.Api.Controllers
                 Identification = dto.Identification,
                 Address = dto.Address,
                 Phone = dto.Phone,
-                ClientCode = dto.ClientCode,
+                ClientCode = code,
                 Password = dto.Password,
                 IsActive = true
             };
+
             _context.Clients.Add(c);
             await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetById), new { id = c.Id },
-                new ClientDto(c.Id, c.Name, c.Gender, c.Age, c.Identification, c.Address, c.Phone, c.ClientCode, c.IsActive));
+                new ClientDto(c.Id, c.Name, c.Gender, c.Age, c.Identification, c.Address,
+                              c.Phone, c.ClientCode, c.IsActive));
         }
 
         [HttpPut("{id:guid}")]

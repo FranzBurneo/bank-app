@@ -1,16 +1,19 @@
-<h2>Cuentas</h2>
+<div class="page-head">
+  <h2>Cuentas</h2>
+  <div class="page-actions">
+    <a class="btn btn-primary" routerLink="/cuentas/nueva">Nueva</a>
+  </div>
+</div>
 
-<p><a routerLink="/cuentas/nueva">Nueva</a></p>
-
-<table class="tbl" *ngIf="!loading; else loadingTpl">
+<table class="table mt-4">
   <thead>
     <tr>
       <th>N° Cuenta</th>
       <th>Tipo</th>
-      <th>Saldo Inicial</th>
+      <th>Saldo inicial</th>
       <th>Estado</th>
       <th>Cliente</th>
-      <th style="width:120px">Acciones</th>
+      <th style="width:130px">Acciones</th>
     </tr>
   </thead>
   <tbody>
@@ -21,13 +24,14 @@
       <td>{{ c.state ? 'Activo' : 'Inactivo' }}</td>
       <td>{{ c.clientName || '-' }}</td>
       <td class="actions">
-        <!-- <a [routerLink]="['/cuentas', c.id || c.number, 'editar']">Editar</a> -->
-        <button (click)="remove(c)">Eliminar</button>
+        <button class="btn btn-ghost"
+                type="button"
+                [routerLink]="['/cuentas', c.id, 'editar']"
+                [disabled]="!c.id">
+          Editar
+        </button>
+        <button class="btn btn-danger" (click)="remove(c)">Eliminar</button>
       </td>
     </tr>
   </tbody>
 </table>
-
-<ng-template #loadingTpl>
-  <p>Cargando...</p>
-</ng-template>

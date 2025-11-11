@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
-export type MovementType = 'Deposit' | 'Withdrawal';
+export type MovementType = 'Credito' | 'Debito';
 
 export interface CreateMovementDto {
   accountId: string;
@@ -25,10 +25,10 @@ export class MovimientosService {
   }
 
   getReport(clientId: string, desde: string, hasta: string) {
-  const params = new HttpParams()
-    .set('ClientId', clientId)   // Model binding en .NET es case-insensitive
-    .set('Desde', desde)
-    .set('Hasta', hasta);
-  return this.http.get<any[]>(`${this.base}/reporte`, { params });
-}
+    const params = new HttpParams()
+      .set('ClientId', clientId)   // Model binding en .NET es case-insensitive
+      .set('Desde', desde)
+      .set('Hasta', hasta);
+    return this.http.get<any[]>(`${this.base}/reporte`, { params });
+  }
 }

@@ -20,6 +20,34 @@
     <input formControlName="phone">
   </div>
 
+  <div class="form-row">
+    <label>Edad</label>
+    <input type="number" formControlName="age">
+  </div>
+
+  <div class="form-row">
+    <label>Cédula</label>
+    <input formControlName="identification">
+  </div>
+
+  <div class="form-row">
+    <label>Dirección</label>
+    <input formControlName="address">
+  </div>
+
+  <div class="form-row">
+    <label>Contraseña</label>
+    <input type="password" formControlName="password">
+  </div>
+
+  <div class="form-row">
+    <label>Código cliente</label>
+    <div style="display:flex; gap:8px;">
+      <input formControlName="clientCode" placeholder="Se genera automáticamente">
+      <button type="button" class="btn" (click)="genCode()">Generar</button>
+    </div>
+  </div>
+
   <div class="form-actions">
     <button class="btn btn-primary" type="submit" [disabled]="f.invalid || saving">
       {{ saving ? 'Guardando...' : 'Guardar' }}
